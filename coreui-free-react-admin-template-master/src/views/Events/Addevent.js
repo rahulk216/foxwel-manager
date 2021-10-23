@@ -45,9 +45,8 @@ const Addevent = () => {
 
   const getEmployee = useSelector((state) => state.getEmployee);
   const { loading, emp, error } = getEmployee;
-  // const addEventCheck = useSelector((state) => state.addEventCheck);
-  // const { loading, success, error } = addEventCheck;
-  console.log(emp);
+
+  const [openAlbum, setOpenAlbum] = useState(false);
 
   const dispatch = useDispatch();
   const [employee, setEmployee] = useState([
@@ -61,6 +60,10 @@ const Addevent = () => {
   const [location, setLocation] = useState("");
   const [eprice, setEprice] = useState("");
 
+  const [sheets, setSheets] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [albumPrice, setAlbumPrice] = useState("");
+  
   useEffect(() => {
     dispatch(getEmp());
   }, []);
@@ -81,7 +84,7 @@ const Addevent = () => {
   const handleAddClick = () => {
     setEmployee([
       ...employee,
-      { empname: "", empdesignation: "", empprice: "" },
+      { empname: "", empdesignation: "", empprice: "" }
     ]);
   };
 
@@ -95,28 +98,14 @@ const Addevent = () => {
       location,
       eprice,
       employee,
+      album: {
+        sheets,
+        quantity,
+        albumPrice,
+      },
     };
-
-    
-    // console.log("hello");
-    // const config = {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // };
-
-    // const { data } = await axios.post(
-    //   "http://localhost:5000/api/events/addevent",
-    //   event,
-    //   config
-    // );
-    // if (data) {
-    //   Swal.fire("Event Created", "You clicked the button!", "success");
-    // }
+    console.log(event);
     dispatch(addEvent(event));
-    // if (success) {
-    //   Swal.fire("Event Created", "You clicked the button!", "success");
-    // }
   };
   const resetHandler = () => {
     setClient("");
@@ -237,6 +226,58 @@ const Addevent = () => {
                     />
                   </CCol>
                 </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel>Album</CLabel>
+                  </CCol>
+                  <CCol md="9">
+                    <CFormGroup variant="custom-checkbox" inline>
+                      <CInputCheckbox
+                        custom
+                        id="inline-checkbox1"
+                        name="inline-checkbox1"
+                        value="option1"
+                        onChange={() => setOpenAlbum(!openAlbum)}
+                      />
+                      <CLabel
+                        variant="custom-checkbox"
+                        htmlFor="inline-checkbox1"
+                      ></CLabel>
+                    </CFormGroup>
+                  </CCol>
+                </CFormGroup>
+                {openAlbum && (
+                  <CFormGroup row>
+                    <CCol md="3">
+                      <CLabel htmlFor="select">Album configurations</CLabel>
+                    </CCol>
+
+                    <CCol xs="12" md="2">
+                      <CInput
+                        id="text-input"
+                        name="sheets"
+                        placeholder="sheets"
+                        onChange={(e) => setSheets(e.target.value)}
+                      />
+                    </CCol>
+                    <CCol xs="12" md="2">
+                      <CInput
+                        id="text-input"
+                        name="quantity"
+                        placeholder="quantity"
+                        onChange={(e) => setQuantity(e.target.value)}
+                      />
+                    </CCol>
+                    <CCol xs="12" md="2">
+                      <CInput
+                        id="text-input"
+                        name="albumPrice"
+                        placeholder="album price"
+                        onChange={(e) => setAlbumPrice(e.target.value)}
+                      />
+                    </CCol>
+                  </CFormGroup>
+                )}
 
                 {employee.map((x, i) => {
                   return (

@@ -9,6 +9,11 @@ const eventSchema = mongoose.Schema({
 			empdesignation: String,
 		},
 	],
+	album: {
+		sheets: String,
+		quantity: String,
+		price: String,
+	},
 	client: String,
 	edate: String,
 	edesc: String,

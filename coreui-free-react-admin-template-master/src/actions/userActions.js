@@ -74,8 +74,6 @@ export const getEmp =() => async (dispatch) => {
         config
       );
 
-      console.log(data);
-
       dispatch({
         type: EMPLOYEE_SUCCESS,
         payload: data,

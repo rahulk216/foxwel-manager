@@ -8,6 +8,8 @@ import {
   CDataTable,
   CRow,
   CSelect,
+  CButton,
+  CCollapse,
 } from "@coreui/react";
 import usersData from "../users/UsersData";
 import axios from "axios";
@@ -28,20 +30,22 @@ const getBadge = (status) => {
       return "primary";
   }
 };
+
 const fields = [
-  "client",
-  "eprice",
-  "etype",
-  "eprice",
+  { key: "client", label: "Client Name" },
+  { key: "eprice", label: "Quoted Price" },
+  { key: "etype", label: "Event Type" },
   "location",
-  "employeeTotalPrice",
-  "createdDate",
+  { key: "employeeTotalPrice", label: "CTC" },
+  "edate",
   "status",
   "UpdateStatus",
 ];
 
 const Manageevent = () => {
+  const [details, setDetails] = useState([]);
   const [eventData, setEventData] = useState([]);
+  const [refreshFunction, setrefreshFunction] = useState(false);
 
   const getEvent = useSelector((state) => state.getEvent);
   const { loading, event, error } = getEvent;
@@ -51,16 +55,29 @@ const Manageevent = () => {
 
   const dispatch = useDispatch();
 
+  const toggleDetails = (index) => {
+    const position = details.indexOf(index);
+    let newDetails = details.slice();
+    if (position !== -1) {
+      newDetails.splice(position, 1);
+    } else {
+      newDetails = [...details, index];
+    }
+    setDetails(newDetails);
+  };
+
   useEffect(() => {
     dispatch(getEventList());
-  }, [dispatch]);
+  }, [dispatch, refreshFunction]);
 
   const update = (item, newstatus, event) => {
-    console.log(newstatus, item);
-    dispatch(updateStatus(newstatus, item, event));
-    if (statusUpdate) {
-      dispatch(getEventList());
-    }
+    const val = Window.confirm("Change status confirmation");
+    if(val)
+   {
+      console.log(newstatus, item);
+    dispatch(updateStatus(newstatus, item, event.employee));
+    setrefreshFunction(!refreshFunction);
+   }
   };
   return (
     <div>
@@ -95,16 +112,20 @@ const Manageevent = () => {
                           custom
                           name="empname"
                           id="select"
-                          onChange={(e) => update(item._id, e.target.value, item)}
+                          onChange={(e) =>
+                            update(item._id, e.target.value, item)
+                          }
                         >
                           <option value="0">Please select</option>
                           <option value="Active">Active</option>
                           <option value="Pending">Pending</option>
                           <option value="Completed">Completed</option>
+                          {/* <option value="Cancel">Cancel</option> */}
                         </select>
                       </td>
                     ),
-                  })
+                  }
+                  )
                 }
               />
             </CCardBody>

@@ -75,7 +75,7 @@ export const getEventList = () => async (dispatch) => {
   }
 };
 
-export const updateStatus = (newstatus, id, event) => async (dispatch) => {
+export const updateStatus = (newstatus, id, eventEmployee) => async (dispatch) => {
   try {
     dispatch({
       type: UPDATE_REQUEST,
@@ -84,7 +84,7 @@ export const updateStatus = (newstatus, id, event) => async (dispatch) => {
     const payload = {
       id,
       newstatus,
-      event,
+      eventEmployee,
     };
 
     const config = {
