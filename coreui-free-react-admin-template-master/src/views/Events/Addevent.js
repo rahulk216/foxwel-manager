@@ -64,6 +64,11 @@ const Addevent = () => {
   const [quantity, setQuantity] = useState("");
   const [albumPrice, setAlbumPrice] = useState("");
   
+  const album ={
+    sheets,
+    quantity,
+    albumPrice
+  }
   useEffect(() => {
     dispatch(getEmp());
   }, []);
@@ -98,11 +103,7 @@ const Addevent = () => {
       location,
       eprice,
       employee,
-      album: {
-        sheets,
-        quantity,
-        albumPrice,
-      },
+      album
     };
     console.log(event);
     dispatch(addEvent(event));

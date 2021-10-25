@@ -66,6 +66,7 @@ const Addemployee = React.lazy(() => import("./views/employee/Addemployee"));
 const Manageemployee = React.lazy(() =>
   import("./views/employee/Manageemployee")
 );
+const Editevent = React.lazy(() => import("./views/Events/Editevent"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
@@ -125,6 +126,7 @@ const routes = [
   { path: "/widgets", name: "Widgets", component: Widgets },
   { path: "/addevent", name: "Add Event", component: Addevent },
   { path: "/manageevent", name: "Manage Event", component: Manageevent },
+  { path: "/editevent", name: "Edit event", component: Editevent },
   { path: "/addemployee", name: "Add Employee", component: Addemployee },
   {
     path: "/manageemployee",

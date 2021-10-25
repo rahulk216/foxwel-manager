@@ -2,11 +2,14 @@ import asyncHandler from 'express-async-handler';
 import { Event, Employee } from '../models/Event.js';
 
 const addEvent = asyncHandler(async (req, res) => {
-	const { etype, edate, edesc, eprice, employee, client, location, album } = req.body;
-	const employeeTotalPrice = employee.reduce(function (prev, current) {
-		return prev + parseInt(current.empprice);
-	}, 0);
+	const { etype, edate, edesc, eprice, employee, client, location, album } =
+		req.body;
+	const employeeTotalPrice =
+		employee.reduce(function (prev, current) {
+			return prev + parseInt(current.empprice);
+		}, 0) + parseInt(album.albumPrice);
 	console.log(album);
+	const profit = eprice - employeeTotalPrice;
 	const event = new Event({
 		etype,
 		eprice,
@@ -15,6 +18,7 @@ const addEvent = asyncHandler(async (req, res) => {
 		location,
 		edate,
 		album,
+		edesc,
 		createdDate: new Date().toISOString(),
 		employeeTotalPrice: employeeTotalPrice.toString(),
 		status: 'Pending',

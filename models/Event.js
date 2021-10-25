@@ -12,7 +12,7 @@ const eventSchema = mongoose.Schema({
 	album: {
 		sheets: String,
 		quantity: String,
-		price: String,
+		albumPrice: String,
 	},
 	client: String,
 	edate: String,
@@ -21,6 +21,13 @@ const eventSchema = mongoose.Schema({
 	createdDate: String,
 	employeeTotalPrice: String,
 	status: String,
+	profit: String,
+	advancePayment:[
+		{
+			price:String,
+			payMethod:String
+		}
+	]
 });
 
 const employeeSchema = mongoose.Schema({

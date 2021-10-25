@@ -24,6 +24,11 @@ const _nav = [
         name: "Manage Events",
         to: "/manageevent",
       },
+      {
+        _tag: "CSidebarNavItem",
+        name: "Edit Event",
+        to: "/editevent",
+      },
     ],
   },
   {
@@ -46,6 +51,7 @@ const _nav = [
         name: "Manage Employee",
         to: "/manageemployee",
       },
+      
     ],
   },
   {
