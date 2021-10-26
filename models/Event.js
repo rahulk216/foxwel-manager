@@ -22,12 +22,14 @@ const eventSchema = mongoose.Schema({
 	employeeTotalPrice: String,
 	status: String,
 	profit: String,
-	advancePayment:[
+	etime: String,
+	remPrice: String,
+	advancePayment: [
 		{
-			price:String,
-			payMethod:String
-		}
-	]
+			price: String,
+			payMethod: String,
+		},
+	],
 });
 
 const employeeSchema = mongoose.Schema({

@@ -34,11 +34,15 @@ const getBadge = (status) => {
 const fields = [
   { key: "client", label: "Client Name" },
   { key: "eprice", label: "Quoted Price" },
+  { key: "remPrice", label: "Remaining Price" },
   { key: "etype", label: "Event Type" },
   "location",
   { key: "employeeTotalPrice", label: "CTC" },
   "edate",
   "status",
+  "payment",
+  "profit",
+
   "UpdateStatus",
 ];
 
@@ -71,13 +75,9 @@ const Manageevent = () => {
   }, [dispatch, refreshFunction]);
 
   const update = (item, newstatus, event) => {
-    const val = Window.confirm("Change status confirmation");
-    if(val)
-   {
-      console.log(newstatus, item);
+    console.log(newstatus, item);
     dispatch(updateStatus(newstatus, item, event.employee));
     setrefreshFunction(!refreshFunction);
-   }
   };
   return (
     <div>
@@ -106,6 +106,15 @@ const Manageevent = () => {
                     ),
                   },
                   {
+                    payment: (item) => (
+                      <td>
+                        <CButton color="success" className="mr-1">
+                          Edit Event
+                        </CButton>
+                      </td>
+                    ),
+                  },
+                  {
                     UpdateStatus: (item) => (
                       <td>
                         <select
@@ -124,8 +133,7 @@ const Manageevent = () => {
                         </select>
                       </td>
                     ),
-                  }
-                  )
+                  })
                 }
               />
             </CCardBody>

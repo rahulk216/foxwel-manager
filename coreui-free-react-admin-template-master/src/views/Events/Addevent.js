@@ -59,16 +59,17 @@ const Addevent = () => {
   const [eDesc, setEDesc] = useState("");
   const [location, setLocation] = useState("");
   const [eprice, setEprice] = useState("");
-
+  const [etime, setEtime] = useState("");
   const [sheets, setSheets] = useState("");
   const [quantity, setQuantity] = useState("");
   const [albumPrice, setAlbumPrice] = useState("");
-  
-  const album ={
+  const [advance, setAdvance] = useState("");
+  const [payMethod, setPayMethod] = useState("");
+  const album = {
     sheets,
     quantity,
-    albumPrice
-  }
+    albumPrice,
+  };
   useEffect(() => {
     dispatch(getEmp());
   }, []);
@@ -89,7 +90,7 @@ const Addevent = () => {
   const handleAddClick = () => {
     setEmployee([
       ...employee,
-      { empname: "", empdesignation: "", empprice: "" }
+      { empname: "", empdesignation: "", empprice: "" },
     ]);
   };
 
@@ -103,7 +104,9 @@ const Addevent = () => {
       location,
       eprice,
       employee,
-      album
+      album,
+      advance,
+      payMethod,
     };
     console.log(event);
     dispatch(addEvent(event));
@@ -185,6 +188,21 @@ const Addevent = () => {
                     />
                   </CCol>
                 </CFormGroup>
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="date-input">Event Time</CLabel>
+                  </CCol>
+                  <CCol xs="12" md="9">
+                    <CInput
+                      type="text"
+                      id="etime"
+                      name="etime"
+                      placeholder="date"
+                      onChange={(e) => setEtime(e.target.value)}
+                    />
+                  </CCol>
+                </CFormGroup>
+                
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="text-input">Event Price</CLabel>
@@ -342,6 +360,46 @@ const Addevent = () => {
                     </CFormGroup>
                   );
                 })}
+                <CFormGroup row>
+                  <CCol md="3">
+                    <CLabel htmlFor="select">Advance Payment</CLabel>
+                  </CCol>
+
+                  <CCol xs="12" md="3">
+                    <CInput
+                      id="text-input"
+                      name="advance"
+                      placeholder="Advance Payment"
+                      onChange={(e) => setAdvance(e.target.value)}
+                    />
+                  </CCol>
+                  <CCol xs="12" md="3">
+                    <CInput
+                      id="text-input"
+                      name="payMethod"
+                      placeholder="Advance Payment Method"
+                      onChange={(e) => setPayMethod(e.target.value)}
+                    />
+                  </CCol>
+
+                  {/* <CCol xs="12" md="2">
+                    {item.employee.length !== 1 && (
+                      <CButton
+                        color="danger"
+                        //onClick={() => handleRemoveClick(i)}
+                      >
+                        Remove
+                      </CButton>
+                    )}
+                  </CCol>
+                  <CCol>
+                    {/* {employee.length - 1 === i && ( */}
+                  {/* <CButton color="primary" onClick={handleAddClick}>
+                      Add
+                    </CButton> */}
+                  {/* )} */}
+                  {/* </CCol> */}
+                </CFormGroup>
               </CForm>
             </CCardBody>
             <CCardFooter>

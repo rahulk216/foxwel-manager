@@ -27,7 +27,11 @@ import {
 import usersData from "../users/UsersData";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { getEventList, updateStatus } from "../../actions/eventActions";
+import {
+  getEventList,
+  updateStatus,
+  updateEvent,
+} from "../../actions/eventActions";
 
 const getBadge = (status) => {
   switch (status) {
@@ -49,7 +53,9 @@ const fields = [
   { key: "eprice", label: "Quoted Price" },
   { key: "etype", label: "Event Type" },
   "location",
+  { key: "etime", label: "Event Time" },
   { key: "employeeTotalPrice", label: "CTC" },
+  "profit",
   "edate",
   "status",
   "EditEvent",
@@ -69,12 +75,66 @@ const Editevent = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  /*edit event states*/
+  const [eid, seteid] = useState("");
+  const [client, setClient] = useState("");
+  const [etype, setEType] = useState("");
+  const [edate, setEDate] = useState("");
+  const [edesc, setEDesc] = useState("");
+  const [location, setLocation] = useState("");
+  const [eprice, setEprice] = useState("");
+  const [sheets, setSheets] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [albumPrice, setAlbumPrice] = useState("");
+  const [status, setStatus] = useState("");
+  const [employeeTotalPrice, setEmployeeTotalPrice] = useState("");
+  const [employee, setEmployee] = useState([
+    { empname: "", empdesignation: "", empprice: "" },
+  ]);
+
+  const [etime, setEtime] = useState("");
+  const album = {
+    sheets,
+    quantity,
+    albumPrice,
+  };
+
+  const updatedEvent = {
+    eid,
+    client,
+    etype,
+    edate,
+    etime,
+    edesc,
+    location,
+    eprice,
+    album,
+    status,
+    employee,
+    employeeTotalPrice,
+  };
+
   const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
   const { statusUpdate, error: updateError } = updateStatusCheck;
   const modalFunction = (item) => {
-    setSuccess(!success);
-    setEditEvent(item);
     console.log(item);
+    setEmployeeTotalPrice(item.employeeTotalPrice);
+    setSuccess(!success);
+    setEmployee(item.employee);
+    seteid(item._id);
+    setEditEvent(item);
+    setClient(item.client);
+    setEType(item.etype);
+    setEDate(item.edate);
+    setEmployee(item.employee);
+    setEtime(item.etime);
+    setEDesc(item.edesc);
+    setLocation(item.location);
+    setEprice(item.eprice);
+    setSheets(item.album.sheets);
+    setQuantity(item.album.quantity);
+    setAlbumPrice(item.album.albumPrice);
+    setStatus(item.status);
   };
   const dispatch = useDispatch();
 
@@ -91,15 +151,33 @@ const Editevent = () => {
 
   useEffect(() => {
     dispatch(getEventList());
-  }, [dispatch, refreshFunction]);
+  }, [dispatch]);
 
-  const update = (item, newstatus, event) => {
-    const val = Window.confirm("Change status confirmation");
-    if (val) {
-      console.log(newstatus, item);
-      dispatch(updateStatus(newstatus, item, event.employee));
-      setrefreshFunction(!refreshFunction);
-    }
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...employee];
+    list[index][name] = value;
+    setEmployee(list);
+  };
+
+  const handleRemoveClick = (index) => {
+    const list = [...employee];
+    list.splice(index, 1);
+    setEmployee(list);
+  };
+
+  const handleAddClick = () => {
+    setEmployee([
+      ...employee,
+      { empname: "", empdesignation: "", empprice: "" },
+    ]);
+  };
+
+  const formUpdateHandler = () => {
+    //console.log(updatedEvent);
+    dispatch(updateEvent(updatedEvent));
+    setSuccess(!success);
+    setrefreshFunction(!refreshFunction);
   };
   return (
     <div>
@@ -175,6 +253,14 @@ const Editevent = () => {
                     </CFormGroup>
                     <CFormGroup row>
                       <CCol md="3">
+                        <CLabel>Event Status</CLabel>
+                      </CCol>
+                      <CCol xs="12" md="9">
+                        <p className="form-control-static">{status}</p>
+                      </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                      <CCol md="3">
                         <CLabel htmlFor="text-input">Client Name</CLabel>
                       </CCol>
                       <CCol xs="12" md="9">
@@ -182,8 +268,8 @@ const Editevent = () => {
                           id="client"
                           name="client"
                           placeholder="Name"
-                          value={editEvent.client}
-                          //onChange={(e) => setClient(e.target.value)}
+                          value={client}
+                          onChange={(e) => setClient(e.target.value)}
                         />
                         <CFormText>Add Client Name</CFormText>
                       </CCol>
@@ -199,8 +285,8 @@ const Editevent = () => {
                           name="etype"
                           placeholder="Enter Event name"
                           autoComplete="email"
-                          value={editEvent.etype}
-                          //onChange={(e) => setEType(e.target.value)}
+                          value={etype}
+                          onChange={(e) => setEType(e.target.value)}
                         />
                         <CFormText className="help-block">
                           Add Event Name
@@ -218,9 +304,24 @@ const Editevent = () => {
                           id="edate"
                           name="edate"
                           placeholder="date"
-                          value={editEvent.edate}
-                          //onChange={(e) => setEDate(e.target.value)}
+                          value={edate}
+                          onChange={(e) => setEDate(e.target.value)}
                         />
+                      </CCol>
+                    </CFormGroup>
+                    <CFormGroup row>
+                      <CCol md="3">
+                        <CLabel htmlFor="text-input">Event Time</CLabel>
+                      </CCol>
+                      <CCol xs="12" md="9">
+                        <CInput
+                          id="etime"
+                          name="etime"
+                          placeholder="Time"
+                          value={etime}
+                          onChange={(e) => setEtime(e.target.value)}
+                        />
+                        <CFormText>Price</CFormText>
                       </CCol>
                     </CFormGroup>
                     <CFormGroup row>
@@ -232,8 +333,8 @@ const Editevent = () => {
                           id="eprice"
                           name="eprice"
                           placeholder="Name"
-                          value={editEvent.eprice}
-                          //onChange={(e) => setEprice(e.target.value)}
+                          value={eprice}
+                          onChange={(e) => setEprice(e.target.value)}
                         />
                         <CFormText>Price</CFormText>
                       </CCol>
@@ -250,8 +351,8 @@ const Editevent = () => {
                           id="edesc"
                           rows="9"
                           placeholder="Content..."
-                          value={editEvent.edesc}
-                          //onChange={(e) => setEDesc(e.target.value)}
+                          value={edesc}
+                          onChange={(e) => setEDesc(e.target.value)}
                         />
                       </CCol>
                     </CFormGroup>
@@ -265,8 +366,8 @@ const Editevent = () => {
                           id="location"
                           rows="5"
                           placeholder="Event Address..."
-                          value={editEvent.location}
-                          //onChange={(e) => setLocation(e.target.value)}
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
                         />
                       </CCol>
                     </CFormGroup>
@@ -275,101 +376,114 @@ const Editevent = () => {
                         <CLabel>Album</CLabel>
                       </CCol>
                       <CCol md="9">
-                        {editEvent.album && (
+                        {album && (
                           <CFormGroup row>
-                           
-
-                            <CCol xs="12" md="2">
+                            <CCol xs="12" md="4">
                               <CInput
                                 id="text-input"
                                 name="sheets"
                                 placeholder="sheets"
-                                value={editEvent.album.sheets}
-                                //onChange={(e) => setSheets(e.target.value)}
+                                value={sheets}
+                                onChange={(e) => setSheets(e.target.value)}
                               />
                             </CCol>
-                            <CCol xs="12" md="2">
+                            <CCol xs="12" md="4">
                               <CInput
                                 id="text-input"
                                 name="quantity"
                                 placeholder="quantity"
-                                value={editEvent.album.quantity}
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                              />
+                            </CCol>
+                            <CCol xs="12" md="4">
+                              <CInput
+                                id="text-input"
+                                name="rice"
+                                placeholder="album price"
+                                value={album.albumPrice}
+                                onChange={(e) => setAlbumPrice(e.target.value)}
+                              />
+                            </CCol>
+                          </CFormGroup>
+                        )}
+                        
+                      </CCol>
+                    </CFormGroup>
+                    {employee.map((emp, i) => (
+                          <CFormGroup row key={i}>
+                            <CCol md="3">
+                              <CLabel htmlFor="select">
+                                Employees Booked for Event
+                              </CLabel>
+                            </CCol>
 
-                                //onChange={(e) => setQuantity(e.target.value)}
+                            <CCol xs="12" md="2">
+                              <CInput
+                                id="text-input"
+                                name="empname"
+                                placeholder="Employee name"
+                                value={emp.empname}
+                                onChange={(e) => handleInputChange(e, i)}
                               />
                             </CCol>
                             <CCol xs="12" md="2">
                               <CInput
                                 id="text-input"
-                                name="albumPrice"
-                                placeholder="album price"
-                                value={editEvent.album.albumPrice}
-
-                                //onChange={(e) => setAlbumPrice(e.target.value)}
+                                name="empdesignation"
+                                placeholder="Designation"
+                                value={emp.empdesignation}
+                                onChange={(e) => handleInputChange(e, i)}
                               />
                             </CCol>
+                            <CCol xs="12" md="2">
+                              <CInput
+                                id="text-input"
+                                name="empprice"
+                                placeholder="Price"
+                                value={emp.empprice}
+                                onChange={(e) => handleInputChange(e, i)}
+                              />
+                            </CCol>
+
+                            <CCol xs="12" md="2">
+                              {employee.length !== 1 && (
+                                <CButton
+                                  color="danger"
+                                  onClick={() => handleRemoveClick(i)}
+                                >
+                                  Remove
+                                </CButton>
+                              )}
+                            </CCol>
+                            <CCol>
+                              {employee.length - 1 === i && (
+                                <CButton
+                                  color="primary"
+                                  //onClick={handleAddClick}
+                                >
+                                  Add
+                                </CButton>
+                              )}
+                            </CCol>
                           </CFormGroup>
-                        )}
-                      </CCol>
-                    </CFormGroup>
-
-                    <CFormGroup row>
-                      <CCol md="3">
-                        <CLabel htmlFor="select">Album configurations</CLabel>
-                      </CCol>
-
-                      <CCol xs="12" md="2">
-                        <CInput
-                          id="text-input"
-                          name="sheets"
-                          placeholder="sheets"
-                          //onChange={(e) => setSheets(e.target.value)}
-                        />
-                      </CCol>
-                      <CCol xs="12" md="2">
-                        <CInput
-                          id="text-input"
-                          name="quantity"
-                          placeholder="quantity"
-                          //onChange={(e) => setQuantity(e.target.value)}
-                        />
-                      </CCol>
-                      <CCol xs="12" md="2">
-                        <CInput
-                          id="text-input"
-                          name="albumPrice"
-                          placeholder="album price"
-                          //onChange={(e) => setAlbumPrice(e.target.value)}
-                        />
-                      </CCol>
-                    </CFormGroup>
+                        ))}
                   </CForm>
                 </CCardBody>
                 <CCardFooter>
                   <CButton
                     type="submit"
-                    //onClick={formHandler}
+                    onClick={formUpdateHandler}
                     size="sm"
                     color="primary"
                   >
                     Submit
                   </CButton>
                   &nbsp;
-                  <CButton
-                    //onClick={resetHandler}
-                    type="reset"
-                    size="sm"
-                    color="danger"
-                  >
-                    Reset
-                  </CButton>
                 </CCardFooter>
               </CCard>
             </CModalBody>
             <CModalFooter>
-              <CButton color="success" onClick={() => setSuccess(!success)}>
-                Do Something
-              </CButton>{" "}
               <CButton color="secondary" onClick={() => setSuccess(!success)}>
                 Cancel
               </CButton>

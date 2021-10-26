@@ -11,6 +11,7 @@ import {
   addEventReducer,
   getEventReducer,
   updateStatusReducer,
+  updateEventReducer,
 } from "./reducers/eventReducer";
 
 const reducer = combineReducers({
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   updateStatusCheck: updateStatusReducer,
   addEmployee: addEmployeeReducer,
   getEmployee: getEmployeeReducer,
+  updateEvent: updateEventReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

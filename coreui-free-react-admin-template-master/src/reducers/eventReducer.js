@@ -9,6 +9,9 @@ import {
   UPDATE_REQUEST,
   UPDATE_SUCCESS,
   UPDATE_FAIL,
+  UPDATE_EVENT_REQUEST,
+  UPDATE_EVENT_SUCCESS,
+  UPDATE_EVENT_FAIL,
 } from "../constants/eventConstants";
 
 export const addEventReducer = (state = {}, action) => {
@@ -49,6 +52,19 @@ export const updateStatusReducer = (state = { loading: true }, action) => {
     case UPDATE_SUCCESS:
       return { loading: true, success: true, statusUpdate: action.payload };
     case UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const updateEventReducer = (state = { loading: true }, action ) => {
+  switch (action.payload) {
+    case UPDATE_EVENT_REQUEST:
+      return { loading: true };
+    case UPDATE_EVENT_SUCCESS:
+      return { loading: true, success: true, eventUpdate: action.payload };
+    case UPDATE_EVENT_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

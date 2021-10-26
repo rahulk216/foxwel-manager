@@ -9,6 +9,9 @@ import {
   UPDATE_REQUEST,
   UPDATE_SUCCESS,
   UPDATE_FAIL,
+  UPDATE_EVENT_REQUEST,
+  UPDATE_EVENT_SUCCESS,
+  UPDATE_EVENT_FAIL,
 } from "../constants/eventConstants";
 import { BASE_URL } from "../constants/urlConstant";
 import axios from "axios";
@@ -26,7 +29,11 @@ export const addEvent = (event) => async (dispatch) => {
         "Content-Type": "application/json",
       },
     };
-    const { data } = await axios.post(`${BASE_URL}/api/events/addevent`,event,config);
+    const { data } = await axios.post(
+      `${BASE_URL}/api/events/addevent`,
+      event,
+      config
+    );
     if (data) {
       Swal.fire("Event Created", "success");
     }
@@ -75,37 +82,72 @@ export const getEventList = () => async (dispatch) => {
   }
 };
 
-export const updateStatus = (newstatus, id, eventEmployee) => async (dispatch) => {
+export const updateStatus =
+  (newstatus, id, eventEmployee) => async (dispatch) => {
+    try {
+      dispatch({
+        type: UPDATE_REQUEST,
+      });
+      console.log(newstatus, id);
+      const payload = {
+        id,
+        newstatus,
+        eventEmployee,
+      };
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const { data } = await axios.put(
+        `${BASE_URL}/api/events/updatestatus`,
+        payload,
+        config
+      );
+
+      dispatch({
+        type: UPDATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const updateEvent = (updatedEvent) => async (dispatch) => {
   try {
     dispatch({
-      type: UPDATE_REQUEST,
+      type: UPDATE_EVENT_REQUEST,
     });
-    console.log(newstatus, id);
-    const payload = {
-      id,
-      newstatus,
-      eventEmployee,
-    };
 
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
-
     const { data } = await axios.put(
-      `${BASE_URL}/api/events/updatestatus`,
-      payload,
+      `${BASE_URL}/api/events/editevent`,
+      updatedEvent,
       config
     );
-
+    if (data) {
+      Swal.fire("Event Updated", "success");
+    }
     dispatch({
-      type: UPDATE_SUCCESS,
+      type: UPDATE_EVENT_SUCCESS,
       payload: data,
     });
   } catch (error) {
     dispatch({
-      type: UPDATE_FAIL,
+      type: UPDATE_EVENT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
