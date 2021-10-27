@@ -31,6 +31,7 @@ const addEvent = asyncHandler(async (req, res) => {
 		client,
 		location,
 		edate,
+		etime,
 		album,
 		edesc,
 		profit,
@@ -106,25 +107,17 @@ const editEvent = asyncHandler(async (req, res) => {
 		location,
 		album,
 		status,
+		payMethod,
+		advance,
 	} = req.body;
-	console.log(
-		eid,
-		etype,
-		edate,
-		edesc,
-		eprice,
-		employee,
-		client,
-		location,
-		album,
-		status,
-		etime
-	);
+
+	const getEvent = await Event.find({ _id: eid });
+	console.log(getEvent);
 	const employeeTotalPrice =
 		employee.reduce(function (prev, current) {
 			return prev + parseInt(current.empprice);
 		}, 0) + parseInt(album.albumPrice);
-	//console.log(employeeTotalPrice);
+
 	const profit = eprice - employeeTotalPrice;
 	const event = new Event({
 		etype,
@@ -141,7 +134,28 @@ const editEvent = asyncHandler(async (req, res) => {
 		employeeTotalPrice: employeeTotalPrice.toString(),
 		status: 'Pending',
 	});
-	console.log(eid);
+
+	if (payMethod && advance) {
+		console.log(parseInt(getEvent[0].remPrice));
+		console.log(parseInt(advance));
+		const remPrice = parseInt(getEvent[0].remPrice) - parseInt(advance);
+		console.log(remPrice);
+		const ans = await Event.updateOne(
+			{ _id: eid },
+			{
+				$push: {
+					advancePayment: {
+						price: advance,
+						payMethod: payMethod,
+					},
+				},
+				$set: {
+					remPrice: remPrice,
+				},
+			}
+		);
+	}
+
 	const ans = await Event.updateOne(
 		{ _id: eid },
 		{
@@ -159,26 +173,24 @@ const editEvent = asyncHandler(async (req, res) => {
 			},
 		}
 	);
-	employee.map(async (emp) => {
-		
-	});
+	employee.map(async (emp) => {});
 	console.log(ans);
 	res.send(ans);
 });
 
-const addAdvance = asyncHandler(async (req, res) => {
-	const { advance, payMethod, eid } = req.body;
-	const ans = await Event.updateOne(
-		{ _id: eid },
-		{
-			$push: {
-				advancePayment: {
-					price: advance,
-					payMethod: payMethod,
-				},
-			},
-		}
-	);
-	res.send(ans);
-});
-export { addEvent, getEvents, updateStatus, editEvent, addAdvance };
+// const addAdvance = asyncHandler(async (req, res) => {
+// 	const { advance, payMethod, eid } = req.body;
+// 	const ans = await Event.updateOne(
+// 		{ _id: eid },
+// 		{
+// 			$push: {
+// 				advancePayment: {
+// 					price: advance,
+// 					payMethod: payMethod,
+// 				},
+// 			},
+// 		}
+// 	);
+// 	res.send(ans);
+// });
+export { addEvent, getEvents, updateStatus, editEvent };

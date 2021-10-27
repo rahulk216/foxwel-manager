@@ -382,23 +382,7 @@ const Addevent = () => {
                     />
                   </CCol>
 
-                  {/* <CCol xs="12" md="2">
-                    {item.employee.length !== 1 && (
-                      <CButton
-                        color="danger"
-                        //onClick={() => handleRemoveClick(i)}
-                      >
-                        Remove
-                      </CButton>
-                    )}
-                  </CCol>
-                  <CCol>
-                    {/* {employee.length - 1 === i && ( */}
-                  {/* <CButton color="primary" onClick={handleAddClick}>
-                      Add
-                    </CButton> */}
-                  {/* )} */}
-                  {/* </CCol> */}
+                  
                 </CFormGroup>
               </CForm>
             </CCardBody>

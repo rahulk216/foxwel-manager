@@ -56,6 +56,7 @@ const fields = [
   { key: "etime", label: "Event Time" },
   { key: "employeeTotalPrice", label: "CTC" },
   "profit",
+  "remPrice",
   "edate",
   "status",
   "EditEvent",
@@ -91,7 +92,9 @@ const Editevent = () => {
   const [employee, setEmployee] = useState([
     { empname: "", empdesignation: "", empprice: "" },
   ]);
-
+  const [advance, setAdvance] = useState("");
+  const [payMethod, setPayMethod] = useState("");
+  const [advancePayment, setAdvancePayment] = useState([]);
   const [etime, setEtime] = useState("");
   const album = {
     sheets,
@@ -112,10 +115,13 @@ const Editevent = () => {
     status,
     employee,
     employeeTotalPrice,
+    advance,
+    payMethod,
   };
 
   const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
   const { statusUpdate, error: updateError } = updateStatusCheck;
+  
   const modalFunction = (item) => {
     console.log(item);
     setEmployeeTotalPrice(item.employeeTotalPrice);
@@ -135,6 +141,7 @@ const Editevent = () => {
     setQuantity(item.album.quantity);
     setAlbumPrice(item.album.albumPrice);
     setStatus(item.status);
+    setAdvancePayment(item.advancePayment);
   };
   const dispatch = useDispatch();
 
@@ -151,7 +158,7 @@ const Editevent = () => {
 
   useEffect(() => {
     dispatch(getEventList());
-  }, [dispatch]);
+  }, [dispatch, refreshFunction]);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -176,8 +183,8 @@ const Editevent = () => {
   const formUpdateHandler = () => {
     //console.log(updatedEvent);
     dispatch(updateEvent(updatedEvent));
-    setSuccess(!success);
     setrefreshFunction(!refreshFunction);
+    setSuccess(!success);
   };
   return (
     <div>
@@ -195,30 +202,27 @@ const Editevent = () => {
                 size="sm"
                 itemsPerPage={10}
                 pagination
-                scopedSlots={
-                  ({
-                    status: (item) => (
-                      <td>
-                        <CBadge color={getBadge(item.status)}>
-                          {item.status}
-                        </CBadge>
-                      </td>
-                    ),
-                  },
-                  {
-                    EditEvent: (item) => (
-                      <td>
-                        <CButton
-                          color="success"
-                          onClick={() => modalFunction(item)}
-                          className="mr-1"
-                        >
-                          Edit Event
-                        </CButton>
-                      </td>
-                    ),
-                  })
-                }
+                scopedSlots={{
+                  status: (item) => (
+                    <td>
+                      <CBadge color={getBadge(item.status)}>
+                        {item.status}
+                      </CBadge>
+                    </td>
+                  ),
+
+                  EditEvent: (item) => (
+                    <td>
+                      <CButton
+                        color="success"
+                        onClick={() => modalFunction(item)}
+                        className="mr-1"
+                      >
+                        Edit Event
+                      </CButton>
+                    </td>
+                  ),
+                }}
               />
             </CCardBody>
           </CCard>
@@ -407,67 +411,51 @@ const Editevent = () => {
                             </CCol>
                           </CFormGroup>
                         )}
-                        
                       </CCol>
                     </CFormGroup>
-                    {employee.map((emp, i) => (
-                          <CFormGroup row key={i}>
-                            <CCol md="3">
-                              <CLabel htmlFor="select">
-                                Employees Booked for Event
-                              </CLabel>
-                            </CCol>
 
-                            <CCol xs="12" md="2">
-                              <CInput
-                                id="text-input"
-                                name="empname"
-                                placeholder="Employee name"
-                                value={emp.empname}
-                                onChange={(e) => handleInputChange(e, i)}
-                              />
-                            </CCol>
-                            <CCol xs="12" md="2">
-                              <CInput
-                                id="text-input"
-                                name="empdesignation"
-                                placeholder="Designation"
-                                value={emp.empdesignation}
-                                onChange={(e) => handleInputChange(e, i)}
-                              />
-                            </CCol>
-                            <CCol xs="12" md="2">
-                              <CInput
-                                id="text-input"
-                                name="empprice"
-                                placeholder="Price"
-                                value={emp.empprice}
-                                onChange={(e) => handleInputChange(e, i)}
-                              />
-                            </CCol>
+                    {advancePayment &&
+                      advancePayment.map((advancePay, i) => (
+                        <CFormGroup row>
+                          <CCol md="3">
+                            <CLabel htmlFor="select">Advance Payments</CLabel>
+                          </CCol>
+                          <CCol xs="12" md="3">
+                            <strong>
+                              <i class="fas fa-rupee-sign"></i>{" "}
+                              {advancePay.price}
+                            </strong>
+                          </CCol>
+                          <CCol xs="12" md="3">
+                            <strong>{advancePay.payMethod}</strong>
+                          </CCol>
+                        </CFormGroup>
+                      ))}
 
-                            <CCol xs="12" md="2">
-                              {employee.length !== 1 && (
-                                <CButton
-                                  color="danger"
-                                  onClick={() => handleRemoveClick(i)}
-                                >
-                                  Remove
-                                </CButton>
-                              )}
-                            </CCol>
-                            <CCol>
-                              {employee.length - 1 === i && (
-                                <CButton
-                                  color="primary"
-                                  //onClick={handleAddClick}
-                                >
-                                  Add
-                                </CButton>
-                              )}
-                            </CCol>
-                          </CFormGroup>
-                        ))}
+                    <CFormGroup row>
+                      <CCol md="3">
+                        <CLabel htmlFor="select">
+                          Add new Advance Payment
+                        </CLabel>
+                      </CCol>
+
+                      <CCol xs="12" md="3">
+                        <CInput
+                          id="text-input"
+                          name="advance"
+                          placeholder="Advance Payment"
+                          onChange={(e) => setAdvance(e.target.value)}
+                        />
+                      </CCol>
+                      <CCol xs="12" md="3">
+                        <CInput
+                          id="text-input"
+                          name="payMethod"
+                          placeholder="Advance Payment Method"
+                          onChange={(e) => setPayMethod(e.target.value)}
+                        />
+                      </CCol>
+                    </CFormGroup>
                   </CForm>
                 </CCardBody>
                 <CCardFooter>
