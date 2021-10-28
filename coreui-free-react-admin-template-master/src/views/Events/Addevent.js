@@ -103,6 +103,7 @@ const Addevent = () => {
       edesc: eDesc,
       location,
       eprice,
+      etime,
       employee,
       album,
       advance,

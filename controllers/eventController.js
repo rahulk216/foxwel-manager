@@ -11,6 +11,7 @@ const addEvent = asyncHandler(async (req, res) => {
 		client,
 		location,
 		album,
+		etime,
 		advance,
 		payMethod,
 	} = req.body;
@@ -178,19 +179,99 @@ const editEvent = asyncHandler(async (req, res) => {
 	res.send(ans);
 });
 
-// const addAdvance = asyncHandler(async (req, res) => {
-// 	const { advance, payMethod, eid } = req.body;
-// 	const ans = await Event.updateOne(
-// 		{ _id: eid },
-// 		{
-// 			$push: {
-// 				advancePayment: {
-// 					price: advance,
-// 					payMethod: payMethod,
-// 				},
-// 			},
-// 		}
-// 	);
-// 	res.send(ans);
-// });
-export { addEvent, getEvents, updateStatus, editEvent };
+const deleteEmployee = asyncHandler(async (req, res) => {
+	const { empname, eid } = req.body;
+	console.log(req.body);
+	console.log(empname, eid);
+	const delfromEvent = await Event.updateOne(
+		{ _id: eid },
+		{
+			$pull: {
+				employee: { empname: empname },
+			},
+		}
+	);
+	if (delfromEvent) {
+		const delFromEmp = await Employee.updateOne(
+			{ empname: empname },
+			{
+				$pull: {
+					empbooking: {
+						_id: eid,
+					},
+				},
+			}
+		);
+		console.log(delFromEmp);
+		const getEvent = await Event.find({ _id: eid });
+		const employeeTotalPrice =
+			getEvent[0].employee.reduce(function (prev, current) {
+				return prev + parseInt(current.empprice);
+			}, 0) + parseInt(getEvent[0].album.albumPrice);
+		const profit =
+			parseInt(getEvent[0].eprice) - parseInt(employeeTotalPrice);
+		const ctcUpdate = await Event.updateOne(
+			{ _id: eid },
+			{
+				$set: {
+					employeeTotalPrice: employeeTotalPrice,
+					profit: profit,
+				},
+			}
+		);
+	}
+	res.send(delfromEvent);
+});
+
+const addEmployeeForEvent = asyncHandler(async (req, res) => {
+	const { eid, empname, empdesignation, empprice } = req.body;
+	const emp = {
+		empname,
+		empdesignation,
+		empprice,
+	};
+	const addEmp = await Event.updateOne(
+		{ _id: eid },
+		{
+			$push: {
+				employee: emp,
+			},
+		}
+	);
+	const getEvent = await Event.find({ _id: eid });
+	const employeeTotalPrice =
+		getEvent[0].employee.reduce(function (prev, current) {
+			return prev + parseInt(current.empprice);
+		}, 0) + parseInt(getEvent[0].album.albumPrice);
+	const profit = parseInt(getEvent[0].eprice) - parseInt(employeeTotalPrice);
+	if (addEmp) {
+		const ans = await Employee.updateOne(
+			{ empname: empname },
+			{
+				$push: {
+					empbooking: getEvent,
+				},
+			}
+		);
+		console.log(addEmp);
+		const ctcUpdate = await Event.updateOne(
+			{ _id: eid },
+			{
+				$set: {
+					employeeTotalPrice: employeeTotalPrice,
+					profit: profit,
+				},
+			}
+		);
+	}
+	res.send(addEmp);
+});
+
+export {
+	addEvent,
+	getEvents,
+	updateStatus,
+	editEvent,
+	deleteEmployee,
+	addEmployeeForEvent,
+};

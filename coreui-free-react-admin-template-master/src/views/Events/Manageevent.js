@@ -19,7 +19,12 @@ import {
 
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { getEventList, updateStatus } from "../../actions/eventActions";
+import {
+  getEventList,
+  updateStatus,
+  delEmployee,
+  addEmployee,
+} from "../../actions/eventActions";
 
 const getBadge = (status) => {
   switch (status) {
@@ -39,13 +44,10 @@ const getBadge = (status) => {
 const fields = [
   { key: "client", label: "Client Name" },
   { key: "eprice", label: "Quoted Price" },
-  { key: "remPrice", label: "Remaining Price" },
   { key: "etype", label: "Event Type" },
   "location",
-  { key: "employeeTotalPrice", label: "CTC" },
   "edate",
   "status",
-  "profit",
   "EditEmployee",
   "UpdateStatus",
 ];
@@ -57,11 +59,27 @@ const Manageevent = () => {
 
   const getEvent = useSelector((state) => state.getEvent);
   const { loading, event, error } = getEvent;
+  const getEmployee = useSelector((state) => state.getEmployee);
+  const {
+    loading: employeeLoading,
+    emp: empList,
+    error: empError,
+  } = getEmployee;
+
+  //const deleteEmployee = useSelector((state) => state.deleteEmployee);
 
   const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
   const { statusUpdate, error: updateError } = updateStatusCheck;
 
   const dispatch = useDispatch();
+
+  const [empname, setEmpname] = useState("");
+  const [empdesignation, setEmpdesignation] = useState("");
+  const [empprice, setEmpprice] = useState("");
+
+  const [employee, setEmployee] = useState([
+    { empname: "", empdesignation: "", empprice: "" },
+  ]);
 
   const toggleDetails = (index) => {
     const position = details.indexOf(index);
@@ -81,6 +99,16 @@ const Manageevent = () => {
   const update = async (item, newstatus, event) => {
     console.log(newstatus, item);
     await dispatch(updateStatus(newstatus, item, event.employee));
+    setrefreshFunction(!refreshFunction);
+  };
+  const deleteEmp = async (emp, eid) => {
+    console.log(emp.empname, eid);
+    await dispatch(delEmployee(emp.empname, eid));
+    setrefreshFunction(!refreshFunction);
+  };
+  const addEmployeeToEvent = async (eid) => {
+    console.log(eid, empname, empdesignation, empprice);
+    await dispatch(addEmployee(eid, empname, empdesignation, empprice));
     setrefreshFunction(!refreshFunction);
   };
   return (
@@ -161,6 +189,7 @@ const Manageevent = () => {
                                           id="text-input"
                                           name="empname"
                                           placeholder="emp name"
+                                          value={emp.empname}
                                           // onChange={(e) =>
                                           //   handleInputChange(e, i)
                                           // }
@@ -171,6 +200,7 @@ const Manageevent = () => {
                                           id="text-input"
                                           name="empdesignation"
                                           placeholder="Designation"
+                                          value={emp.empdesignation}
                                           // onChange={(e) =>
                                           //   handleInputChange(e, i)
                                           // }
@@ -181,6 +211,7 @@ const Manageevent = () => {
                                           id="text-input"
                                           name="empprice"
                                           placeholder="Price"
+                                          value={emp.empprice}
                                           // onChange={(e) =>
                                           //   handleInputChange(e, i)
                                           // }
@@ -190,7 +221,9 @@ const Manageevent = () => {
                                         {emp.length !== 1 && (
                                           <CButton
                                             color="danger"
-                                            //onClick={() => handleRemoveClick(i)}
+                                            onClick={() =>
+                                              deleteEmp(emp, item._id)
+                                            }
                                           >
                                             Remove
                                           </CButton>
@@ -200,7 +233,7 @@ const Manageevent = () => {
                                         {emp.length - 1 === i && (
                                           <CButton
                                             color="primary"
-                                            //onClick={handleAddClick}
+                                            // onClick={handleAddClick}
                                           >
                                             Add
                                           </CButton>
@@ -210,6 +243,63 @@ const Manageevent = () => {
                                   );
                                 })}
                               </CForm>
+                            </CCardBody>
+                          </CCard>
+                          <CCard>
+                            <CCardBody>
+                              <CCol md="3">
+                                <CLabel htmlFor="select">
+                                  Add New Employee
+                                </CLabel>
+                              </CCol>
+                              <CFormGroup row>
+                                <CCol xs="12" md="2">
+                                  <CSelect
+                                    custom
+                                    name="empname"
+                                    onChange={(e) => setEmpname(e.target.value)}
+                                    id="select"
+                                  >
+                                    <option value="0">Please select</option>
+                                    {empList &&
+                                      empList.map((employee) => (
+                                        <option value={employee.empname}>
+                                          {employee.empname}
+                                        </option>
+                                      ))}
+                                  </CSelect>
+                                </CCol>
+                                <CCol xs="12" md="2">
+                                  <CInput
+                                    id="text-input"
+                                    name="empdesignation"
+                                    placeholder="Designation"
+                                    //value={emp.empdesignation}
+                                    onChange={(e) =>
+                                      setEmpdesignation(e.target.value)
+                                    }
+                                  />
+                                </CCol>
+                                <CCol xs="12" md="2">
+                                  <CInput
+                                    id="text-input"
+                                    name="empprice"
+                                    placeholder="Price"
+                                    onChange={(e) =>
+                                      setEmpprice(e.target.value)
+                                    }
+                                  />
+                                </CCol>
+
+                                <CCol>
+                                  <CButton
+                                    color="primary"
+                                    onClick={() => addEmployeeToEvent(item._id)}
+                                  >
+                                    Add
+                                  </CButton>
+                                </CCol>
+                              </CFormGroup>
                             </CCardBody>
                           </CCard>
                         </CCardBody>
