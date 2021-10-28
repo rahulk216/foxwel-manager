@@ -118,10 +118,10 @@ const Editevent = () => {
     advance,
     payMethod,
   };
-
+  console.log(refreshFunction);
   const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
   const { statusUpdate, error: updateError } = updateStatusCheck;
-  
+
   const modalFunction = (item) => {
     console.log(item);
     setEmployeeTotalPrice(item.employeeTotalPrice);
@@ -180,9 +180,8 @@ const Editevent = () => {
     ]);
   };
 
-  const formUpdateHandler = () => {
-    //console.log(updatedEvent);
-    dispatch(updateEvent(updatedEvent));
+  const formUpdateHandler = async () => {
+    await dispatch(updateEvent(updatedEvent));
     setrefreshFunction(!refreshFunction);
     setSuccess(!success);
   };

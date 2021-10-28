@@ -78,9 +78,9 @@ const Manageevent = () => {
     dispatch(getEventList());
   }, [dispatch, refreshFunction]);
 
-  const update = (item, newstatus, event) => {
+  const update = async (item, newstatus, event) => {
     console.log(newstatus, item);
-    dispatch(updateStatus(newstatus, item, event.employee));
+    await dispatch(updateStatus(newstatus, item, event.employee));
     setrefreshFunction(!refreshFunction);
   };
   return (
@@ -135,7 +135,7 @@ const Manageevent = () => {
                             toggleDetails(index);
                           }}
                         >
-                          {details.includes(index) ? "Hide" : "Show"}
+                          {details.includes(index) ? "Hide" : "Edit"}
                         </CButton>
                       </td>
                     );
