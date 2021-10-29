@@ -56,7 +56,7 @@ const fields = [
   { key: "etime", label: "Event Time" },
   { key: "employeeTotalPrice", label: "CTC" },
   "profit",
-  "remPrice",
+  { key: "remPrice", label: "Pending" },
   "edate",
   "status",
   "EditEvent",
