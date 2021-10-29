@@ -59,39 +59,40 @@ export const logout = () => (dispatch) => {
   document.location.href = "/login";
 };
 
-export const getEmp =() => async (dispatch) => {
-    try {
-      
-      dispatch({ type: EMPLOYEE_REQUEST });
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-     
-      const { data } = await axios.get(
-        `${BASE_URL}/api/users/getemp`,
-        config
-      );
+export const getEmp = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: EMPLOYEE_REQUEST });
 
-      dispatch({
-        type: EMPLOYEE_SUCCESS,
-        payload: data,
-      });
-      
-    } catch (error) {
-      dispatch({
-        type: EMPLOYEE_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      });
-    }
-  };
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`${BASE_URL}/api/users/getemp`, config);
+
+    dispatch({
+      type: EMPLOYEE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: EMPLOYEE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const addEmp =
-  (empname, empemail, empdesignation) => async (dispatch) => {
+  (empname, empemail, empdesignation) => async (dispatch, getState) => {
     try {
       const emp = {
         empname,
@@ -99,9 +100,15 @@ export const addEmp =
         empdesignation,
       };
       dispatch({ type: ADD_EMPLOYEE_REQUEST });
+      
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
       const config = {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
       console.log(emp);

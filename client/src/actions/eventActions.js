@@ -24,15 +24,19 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
 
-export const addEvent = (event) => async (dispatch) => {
+export const addEvent = (event) => async (dispatch, getState) => {
   try {
     dispatch({
       type: EVENT_CREATE_REQUEST,
     });
+    const {
+      userLogin: { userInfo },
+    } = getState();
 
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.post(
@@ -58,14 +62,20 @@ export const addEvent = (event) => async (dispatch) => {
   }
 };
 
-export const getEventList = () => async (dispatch) => {
+export const getEventList = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: EVENT_DETAILS_REQUEST,
     });
-
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    //console.log(userInfo.token);
     const config = {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
     };
 
     const { data } = await axios.get(
@@ -89,7 +99,7 @@ export const getEventList = () => async (dispatch) => {
 };
 
 export const updateStatus =
-  (newstatus, id, eventEmployee) => async (dispatch) => {
+  (newstatus, id, eventEmployee) => async (dispatch, getState) => {
     try {
       dispatch({
         type: UPDATE_REQUEST,
@@ -100,9 +110,14 @@ export const updateStatus =
         eventEmployee,
       };
 
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      //console.log(userInfo.token);
       const config = {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
 
@@ -127,15 +142,20 @@ export const updateStatus =
     }
   };
 
-export const updateEvent = (updatedEvent) => async (dispatch) => {
+export const updateEvent = (updatedEvent) => async (dispatch, getState) => {
   try {
     dispatch({
       type: UPDATE_EVENT_REQUEST,
     });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    //console.log(userInfo.token);
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
     const { data } = await axios.put(
@@ -161,7 +181,7 @@ export const updateEvent = (updatedEvent) => async (dispatch) => {
   }
 };
 
-export const delEmployee = (empname, eid) => async (dispatch) => {
+export const delEmployee = (empname, eid) => async (dispatch, getState) => {
   try {
     dispatch({
       type: EMPLOYEE_DELETE_REQUEST,
@@ -174,9 +194,14 @@ export const delEmployee = (empname, eid) => async (dispatch) => {
 
     console.log(payload);
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    //console.log(userInfo.token);
     const config = {
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -206,7 +231,7 @@ export const delEmployee = (empname, eid) => async (dispatch) => {
 };
 
 export const addEmployee =
-  (eid, empname, empdesignation, empprice) => async (dispatch) => {
+  (eid, empname, empdesignation, empprice) => async (dispatch, getState) => {
     try {
       dispatch({
         type: ADD_EMPLOYEE_REQUEST,
@@ -221,9 +246,14 @@ export const addEmployee =
 
       console.log(payload);
 
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
       const config = {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
 
