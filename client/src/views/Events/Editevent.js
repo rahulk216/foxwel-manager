@@ -9,29 +9,25 @@ import {
   CInput,
   CTextarea,
   CCardFooter,
-  CInputCheckbox,
+  // CInputCheckbox,
   CCardBody,
   CCardHeader,
   CCol,
   CDataTable,
   CRow,
-  CSelect,
+  // CSelect,
   CButton,
-  CCollapse,
+  // CCollapse,
   CModal,
   CModalBody,
   CModalFooter,
   CModalHeader,
   CModalTitle,
 } from "@coreui/react";
-import usersData from "../users/UsersData";
-import axios from "axios";
+// import usersData from "../users/UsersData";
+// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getEventList,
-  updateStatus,
-  updateEvent,
-} from "../../actions/eventActions";
+import { getEventList, updateEvent } from "../../actions/eventActions";
 
 const getBadge = (status) => {
   switch (status) {
@@ -63,15 +59,15 @@ const fields = [
 ];
 
 const Editevent = () => {
-  const [details, setDetails] = useState([]);
-  const [eventData, setEventData] = useState([]);
+  // const [details, setDetails] = useState([]);
+  // const [eventData, setEventData] = useState([]);
 
   const [refreshFunction, setrefreshFunction] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [editEvent, setEditEvent] = useState([]);
+  // const [editEvent, setEditEvent] = useState([]);
 
   const getEvent = useSelector((state) => state.getEvent);
-  const { loading, event, error } = getEvent;
+  const { event } = getEvent;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -119,8 +115,8 @@ const Editevent = () => {
     payMethod,
   };
   console.log(refreshFunction);
-  const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
-  const { statusUpdate, error: updateError } = updateStatusCheck;
+  // const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
+  // const { statusUpdate, error: updateError } = updateStatusCheck;
 
   const modalFunction = (item) => {
     console.log(item);
@@ -128,7 +124,7 @@ const Editevent = () => {
     setSuccess(!success);
     setEmployee(item.employee);
     seteid(item._id);
-    setEditEvent(item);
+    // setEditEvent(item);
     setClient(item.client);
     setEType(item.etype);
     setEDate(item.edate);
@@ -145,40 +141,40 @@ const Editevent = () => {
   };
   const dispatch = useDispatch();
 
-  const toggleDetails = (index) => {
-    const position = details.indexOf(index);
-    let newDetails = details.slice();
-    if (position !== -1) {
-      newDetails.splice(position, 1);
-    } else {
-      newDetails = [...details, index];
-    }
-    setDetails(newDetails);
-  };
+  // const toggleDetails = (index) => {
+  //   const position = details.indexOf(index);
+  //   let newDetails = details.slice();
+  //   if (position !== -1) {
+  //     newDetails.splice(position, 1);
+  //   } else {
+  //     newDetails = [...details, index];
+  //   }
+  //   setDetails(newDetails);
+  // };
 
   useEffect(() => {
     dispatch(getEventList());
   }, [dispatch, refreshFunction]);
 
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...employee];
-    list[index][name] = value;
-    setEmployee(list);
-  };
+  // const handleInputChange = (e, index) => {
+  //   const { name, value } = e.target;
+  //   const list = [...employee];
+  //   list[index][name] = value;
+  //   setEmployee(list);
+  // };
 
-  const handleRemoveClick = (index) => {
-    const list = [...employee];
-    list.splice(index, 1);
-    setEmployee(list);
-  };
+  // const handleRemoveClick = (index) => {
+  //   const list = [...employee];
+  //   list.splice(index, 1);
+  //   setEmployee(list);
+  // };
 
-  const handleAddClick = () => {
-    setEmployee([
-      ...employee,
-      { empname: "", empdesignation: "", empprice: "" },
-    ]);
-  };
+  // const handleAddClick = () => {
+  //   setEmployee([
+  //     ...employee,
+  //     { empname: "", empdesignation: "", empprice: "" },
+  //   ]);
+  // };
 
   const formUpdateHandler = async () => {
     await dispatch(updateEvent(updatedEvent));

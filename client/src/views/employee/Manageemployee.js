@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-  CBadge,
+  // CBadge,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
   CDataTable,
   CRow,
-  CSelect,
+  // CSelect,
   CButton,
   CModal,
   CModalBody,
@@ -15,13 +15,13 @@ import {
   CModalHeader,
   CModalTitle,
 } from "@coreui/react";
-import axios from "axios";
+// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getEmp } from "../../actions/userActions";
 
 const Manageemployee = () => {
   const getEmployee = useSelector((state) => state.getEmployee);
-  const { loading, emp, error } = getEmployee;
+  const { emp } = getEmployee;
 
   const fields = ["empname", "empdesignation", "Bookings"];
   const bookingfields = ["etype", "client", "eprice", "location", "status"];
@@ -36,7 +36,7 @@ const Manageemployee = () => {
   };
   useEffect(() => {
     dispatch(getEmp());
-  }, []);
+  }, [dispatch]);
   return (
     <div>
       <CRow>

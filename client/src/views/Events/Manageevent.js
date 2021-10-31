@@ -10,14 +10,14 @@ import {
   CSelect,
   CButton,
   CCollapse,
-  CCardFooter,
+  // CCardFooter,
   CForm,
   CFormGroup,
   CInput,
   CLabel,
 } from "@coreui/react";
 
-import axios from "axios";
+// import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getEventList,
@@ -54,22 +54,18 @@ const fields = [
 
 const Manageevent = () => {
   const [details, setDetails] = useState([]);
-  const [eventData, setEventData] = useState([]);
+  // const [eventData, setEventData] = useState([]);
   const [refreshFunction, setrefreshFunction] = useState(false);
 
   const getEvent = useSelector((state) => state.getEvent);
-  const { loading, event, error } = getEvent;
+  const { event } = getEvent;
   const getEmployee = useSelector((state) => state.getEmployee);
-  const {
-    loading: employeeLoading,
-    emp: empList,
-    error: empError,
-  } = getEmployee;
+  const { emp: empList } = getEmployee;
 
   //const deleteEmployee = useSelector((state) => state.deleteEmployee);
 
-  const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
-  const { statusUpdate, error: updateError } = updateStatusCheck;
+  // const updateStatusCheck = useSelector((state) => state.updateStatusCheck);
+  // const {  error: updateError } = updateStatusCheck;
 
   const dispatch = useDispatch();
 
@@ -77,9 +73,9 @@ const Manageevent = () => {
   const [empdesignation, setEmpdesignation] = useState("");
   const [empprice, setEmpprice] = useState("");
 
-  const [employee, setEmployee] = useState([
-    { empname: "", empdesignation: "", empprice: "" },
-  ]);
+  // const [employee, setEmployee] = useState([
+  //   { empname: "", empdesignation: "", empprice: "" },
+  // ]);
 
   const toggleDetails = (index) => {
     const position = details.indexOf(index);

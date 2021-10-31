@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   CButton,
   CCard,
@@ -13,7 +13,7 @@ import {
   CLabel,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addEmp } from "../../actions/userActions";
 
 const Addemployee = () => {
@@ -23,16 +23,16 @@ const Addemployee = () => {
 
   const dispatch = useDispatch();
 
-  const addEmployee = useSelector((state) => state.addEmployee);
-  const { loading, emp, error } = addEmployee;
-  console.log(addEmployee);
+  // const addEmployee = useSelector((state) => state.addEmployee);
+  // const { emp } = addEmployee;
+  // console.log(addEmployee);
 
   const formHandler = () => {
-    const employee = {
-      empname,
-      empemail,
-      empdesignation,
-    };
+    // const employee = {
+    //   empname,
+    //   empemail,
+    //   empdesignation,
+    // };
     dispatch(addEmp(empname, empemail, empdesignation));
   };
   return (

@@ -9,30 +9,22 @@ import {
   CHeaderNavLink,
   CSubheader,
   CBreadcrumbRouter,
-  CLink,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
 // routes config
 import routes from "../routes";
 
-import {
-  TheHeaderDropdown,
-  TheHeaderDropdownMssg,
-  TheHeaderDropdownNotif,
-  TheHeaderDropdownTasks,
-} from "./index";
+import { TheHeaderDropdown } from "./index";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
-  console.log(sidebarShow);
 
   const toggleSidebar = () => {
     const val = [true, "responsive"].includes(sidebarShow)
       ? false
       : "responsive";
-    console.log(val);
     dispatch({ type: "set", sidebarShow: val });
   };
 

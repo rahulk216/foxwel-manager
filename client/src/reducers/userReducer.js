@@ -58,6 +58,7 @@ export const changeStateReducer = (
 ) => {
   switch (type) {
     case "set":
+      //console.log(state, rest);
       return { ...state, ...rest };
     default:
       return state;

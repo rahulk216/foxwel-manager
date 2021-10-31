@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { TheContent, TheSidebar, TheFooter, TheHeader } from "./index";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const TheLayout = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -10,7 +10,7 @@ const TheLayout = ({ history }) => {
     if (!userInfo) {
       history.push("/login");
     }
-  }, []);
+  }, [history, userInfo]);
   return (
     <div className="c-app c-default-layout">
       <TheSidebar />

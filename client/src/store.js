@@ -8,7 +8,6 @@ import {
   getEmployeeReducer,
 } from "./reducers/userReducer";
 import {
-  addEventReducer,
   getEventReducer,
   updateStatusReducer,
   updateEventReducer,

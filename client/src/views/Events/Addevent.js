@@ -9,31 +9,31 @@ import {
   CForm,
   CFormGroup,
   CFormText,
-  CValidFeedback,
-  CInvalidFeedback,
+  // CValidFeedback,
+  // CInvalidFeedback,
   CTextarea,
   CInput,
-  CInputFile,
+  // CInputFile,
   CInputCheckbox,
-  CInputRadio,
-  CInputGroup,
-  CInputGroupAppend,
-  CInputGroupPrepend,
-  CDropdown,
-  CInputGroupText,
+  // CInputRadio,
+  // CInputGroup,
+  // CInputGroupAppend,
+  // CInputGroupPrepend,
+  // CDropdown,
+  // CInputGroupText,
   CLabel,
   CSelect,
   CRow,
-  CSwitch,
-  CToast,
-  CToastBody,
-  CToastHeader,
-  CToaster,
+  // CSwitch,
+  // CToast,
+  // CToastBody,
+  // CToastHeader,
+  // CToaster,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import axios from "axios";
-import Swal from "sweetalert2";
-import "sweetalert2/src/sweetalert2.scss";
+// import CIcon from "@coreui/icons-react";
+// import axios from "axios";
+// import Swal from "sweetalert2";
+// import "sweetalert2/src/sweetalert2.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addEvent } from "../../actions/eventActions";
 
@@ -44,7 +44,7 @@ const Addevent = () => {
   const { userInfo } = userLogin;
 
   const getEmployee = useSelector((state) => state.getEmployee);
-  const { loading, emp, error } = getEmployee;
+  const { emp } = getEmployee;
 
   const [openAlbum, setOpenAlbum] = useState(false);
 
@@ -72,7 +72,7 @@ const Addevent = () => {
   };
   useEffect(() => {
     dispatch(getEmp());
-  }, []);
+  }, [dispatch]);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -203,7 +203,7 @@ const Addevent = () => {
                     />
                   </CCol>
                 </CFormGroup>
-                
+
                 <CFormGroup row>
                   <CCol md="3">
                     <CLabel htmlFor="text-input">Event Price</CLabel>
@@ -382,8 +382,6 @@ const Addevent = () => {
                       onChange={(e) => setPayMethod(e.target.value)}
                     />
                   </CCol>
-
-                  
                 </CFormGroup>
               </CForm>
             </CCardBody>
